@@ -25,13 +25,9 @@ export class ChatGetway implements OnGatewayInit, OnGatewayConnection, OnGateway
 
     @SubscribeMessage('message')
     handleMessage(@MessageBody() message: string): void { //replace void per WsResponse<string> 
-        this.server.emit('message', message)
+        const data = JSON.parse(JSON.stringify(new Object(message)));
+        this.server.emit(`message_client_${data.receiver_id}`, message)
+        this.server.emit(`message_client_${data.sender_id}`, message)
         //return { event: 'message', data: message } //if the message is sended only for the client
-    }
-
-    @SubscribeMessage('message2')
-    handleMessage2(@MessageBody() message2: string): void {
-        this.server.emit('message', message2)
-        this.server.emit('message2', message2)
     }
 }
